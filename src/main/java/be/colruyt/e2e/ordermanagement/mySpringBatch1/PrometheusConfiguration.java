@@ -40,6 +40,12 @@ public class PrometheusConfiguration {
 		PrometheusMeterRegistry prometheusMeterRegistry = new PrometheusMeterRegistry(PrometheusConfig.DEFAULT);
 		collectorRegistry = prometheusMeterRegistry.getPrometheusRegistry();
 		Metrics.globalRegistry.add(prometheusMeterRegistry);
+
+//		try {
+//			pushGateway.pushAdd(collectorRegistry, prometheusJobName, groupingKey);
+//		} catch (Throwable ex) {
+//			LOGGER.error("Unable to push metrics to Prometheus Push Gateway", ex);
+//		}
 	}
 
 	@Scheduled(fixedRateString = "${prometheus.push.rate}")

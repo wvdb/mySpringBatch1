@@ -98,13 +98,5 @@ public class BatchConfiguration {
                 .build();
     }
 
-//    @Bean
-//    @Qualifier("validationStep")
-//    public Step validationStep(ValidationTasklet validationTasklet) {
-//        return stepBuilderFactory.get("validationStep")
-//                .tasklet(validationTasklet)
-//                .build();
-//    }
-
 }
 
