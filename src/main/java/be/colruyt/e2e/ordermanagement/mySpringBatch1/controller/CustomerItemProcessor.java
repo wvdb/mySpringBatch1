@@ -14,18 +14,19 @@ public class CustomerItemProcessor {
     @Autowired
     private Validator validator;
 
-    protected Customer isCustomerValid(Customer customer) {
+    protected boolean isCustomerValid(Customer customer) {
         Set<ConstraintViolation<Customer>> violations = validator.validate(customer);
+        boolean isValid = true;
 
         if (violations.isEmpty()) {
-            customer = customer.getLastName().toLowerCase().startsWith("trump") ? null : customer;
+            isValid = !customer.getLastName().toLowerCase().startsWith("trump");
         }
         else {
             log.error("Validation Customer {} failed with violations {}.", customer, violations);
-            customer = null;
+            isValid = false;
         }
 
-        return customer;
+        return isValid;
     }
 
 }

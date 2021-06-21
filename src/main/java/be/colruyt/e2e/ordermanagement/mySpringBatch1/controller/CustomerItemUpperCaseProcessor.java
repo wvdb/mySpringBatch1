@@ -11,9 +11,12 @@ public class CustomerItemUpperCaseProcessor extends  CustomerItemProcessor imple
     public Customer process(final Customer inputCustomer) {
         Customer outputCustomer = new Customer(inputCustomer.getCustomerId(), inputCustomer.getFirstName().toUpperCase(), inputCustomer.getLastName().toUpperCase(), inputCustomer.getCustomerCreationDate());
 
-        outputCustomer = isCustomerValid(outputCustomer);
-
-        log.info("Converted (" + inputCustomer + ") into (" + outputCustomer + ")");
+        if (isCustomerValid(outputCustomer)) {
+            log.info("Converted (" + inputCustomer + ") into (" + outputCustomer + ")");
+        }
+        else {
+            outputCustomer = null;
+        }
 
         return outputCustomer;
     }
