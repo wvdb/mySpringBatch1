@@ -16,17 +16,20 @@ import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilde
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
+import org.springframework.batch.item.kafka.KafkaItemWriter;
+import org.springframework.batch.item.kafka.builder.KafkaItemWriterBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
+import org.springframework.kafka.core.KafkaTemplate;
 
 import javax.sql.DataSource;
 
 @Configuration
 @EnableBatchProcessing
-public class BatchConfiguration {
+public class MyBatchConfiguration {
     @Autowired
     public JobBuilderFactory jobBuilderFactory;
 
@@ -35,6 +38,8 @@ public class BatchConfiguration {
 
     @Value("${app.springBatchInputFileName}")
     private Resource inputFileResource;
+
+    private static KafkaTemplate<String, Customer> kafkaTemplate;
 
     @Bean
     public FlatFileItemReader<Customer> reader() {
@@ -59,7 +64,7 @@ public class BatchConfiguration {
         return new CustomerItemLowerCaseProcessor();
     }
 
-    @Bean
+    @Bean(name = "JdbcBatchItemWriter")
     public JdbcBatchItemWriter<Customer> writer(DataSource dataSource) {
         return new JdbcBatchItemWriterBuilder<Customer>()
                 .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
@@ -68,13 +73,22 @@ public class BatchConfiguration {
                 .build();
     }
 
+    @Bean(name = "KafkaItemWriter")
+    public KafkaItemWriter<String, Customer> writer(KafkaTemplate<String, Customer> kafkaTemplate) {
+        return new KafkaItemWriterBuilder<String, Customer>()
+                .kafkaTemplate(kafkaTemplate)
+                .itemKeyMapper(customer -> Integer.toString(customer.getCustomerId()))
+                .build();
+    }
+
     @Bean
-    public Job importCustomerJob(JobCompletionNotificationListener listener, Step step1, Step step2) {
+    public Job importCustomerJob(JobCompletionNotificationListener listener, Step step1, Step step2, Step step3) {
         return jobBuilderFactory.get("importCustomerJob")
                 .incrementer(new RunIdIncrementer())
                 .listener(listener)
                 .start(step1)
                 .next(step2)
+                .next(step3)
                 .build();
     }
 
@@ -91,6 +105,16 @@ public class BatchConfiguration {
     @Bean
     public Step step2(JdbcBatchItemWriter<Customer> writer) {
         return stepBuilderFactory.get("step2")
+                .<Customer, Customer>chunk(10)
+                .reader(reader())
+                .processor(lowerCaseProcessor())
+                .writer(writer)
+                .build();
+    }
+
+    @Bean
+    public Step step3(KafkaItemWriter<String, Customer> writer) {
+        return stepBuilderFactory.get("step3")
                 .<Customer, Customer>chunk(10)
                 .reader(reader())
                 .processor(lowerCaseProcessor())

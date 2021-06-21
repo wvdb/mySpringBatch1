@@ -112,6 +112,10 @@
 			<artifactId>simpleclient_pushgateway</artifactId>
 			<version>${prometheus_pushgateway.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.kafka</groupId>
+			<artifactId>spring-kafka</artifactId>
+		</dependency>
         <!-- TEST -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
