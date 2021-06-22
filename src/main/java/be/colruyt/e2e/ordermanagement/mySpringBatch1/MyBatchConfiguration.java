@@ -1,9 +1,6 @@
 package be.colruyt.e2e.ordermanagement.mySpringBatch1;
 
-import be.colruyt.e2e.ordermanagement.mySpringBatch1.controller.CustomerItemLowerCaseProcessor;
-import be.colruyt.e2e.ordermanagement.mySpringBatch1.controller.CustomerItemUpperCaseProcessor;
-import be.colruyt.e2e.ordermanagement.mySpringBatch1.controller.JobCompletionNotificationListener;
-import be.colruyt.e2e.ordermanagement.mySpringBatch1.controller.KafkaItemWriteListener;
+import be.colruyt.e2e.ordermanagement.mySpringBatch1.controller.*;
 import be.colruyt.e2e.ordermanagement.mySpringBatch1.model.Customer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -39,17 +36,33 @@ public class MyBatchConfiguration {
     @Autowired
     public StepBuilderFactory stepBuilderFactory;
 
-    @Value("${app.springBatchInputFileName}")
-    private Resource inputFileResource;
+    @Value("${app.springBatchInputFileNameStep1}")
+    private Resource inputFileResourceStep1;
+
+    @Value("${app.springBatchInputFileNameStep3}")
+    private Resource inputFileResourceStep3;
 
     @Autowired
     private KafkaTemplate<String, Customer> kafkaTemplate;
 
-    @Bean
-    public FlatFileItemReader<Customer> reader() {
+    @Bean(name = "customerItemReaderStep1")
+    public FlatFileItemReader<Customer> customerItemReaderStep1() {
         return new FlatFileItemReaderBuilder<Customer>()
-                .name("personItemReader")
-                .resource(inputFileResource)
+                .name("customerItemReaderStep1")
+                .resource(inputFileResourceStep1)
+                .delimited()
+                .names("firstName", "lastName")
+                .fieldSetMapper(new BeanWrapperFieldSetMapper<Customer>() {{
+                    setTargetType(Customer.class);
+                }})
+                .build();
+    }
+
+    @Bean(name = "customerItemReaderStep3")
+    public FlatFileItemReader<Customer> customerItemReaderStep3() {
+        return new FlatFileItemReaderBuilder<Customer>()
+                .name("customerItemReaderStep3")
+                .resource(inputFileResourceStep3)
                 .delimited()
                 .names("firstName", "lastName")
                 .fieldSetMapper(new BeanWrapperFieldSetMapper<Customer>() {{
@@ -66,6 +79,11 @@ public class MyBatchConfiguration {
     @Bean
     public CustomerItemLowerCaseProcessor lowerCaseProcessor() {
         return new CustomerItemLowerCaseProcessor();
+    }
+
+    @Bean
+    public CustomerItemDummyProcessor dummyProcessor() {
+        return new CustomerItemDummyProcessor();
     }
 
     @Bean(name = "JdbcBatchItemWriter")
@@ -100,7 +118,7 @@ public class MyBatchConfiguration {
     public Step step1(JdbcBatchItemWriter<Customer> writer) {
         return stepBuilderFactory.get("step1")
                 .<Customer, Customer>chunk(10)
-                .reader(reader())
+                .reader(customerItemReaderStep1())
                 .processor(upperCaseProcessor())
                 .writer(writer)
                 .build();
@@ -110,7 +128,7 @@ public class MyBatchConfiguration {
     public Step step2(JdbcBatchItemWriter<Customer> writer) {
         return stepBuilderFactory.get("step2")
                 .<Customer, Customer>chunk(10)
-                .reader(reader())
+                .reader(customerItemReaderStep1())
                 .processor(lowerCaseProcessor())
                 .writer(writer)
                 .build();
@@ -119,9 +137,9 @@ public class MyBatchConfiguration {
     @Bean
     public Step step3(KafkaItemWriter<String, Customer> writer) {
         return stepBuilderFactory.get("step3")
-                .<Customer, Customer>chunk(10)
-                .reader(reader())
-                .processor(lowerCaseProcessor())
+                .<Customer, Customer>chunk(5)
+                .reader(customerItemReaderStep3())
+                .processor(dummyProcessor())
                 .writer(writer)
                 .listener(new KafkaItemWriteListener())
                 .build();
