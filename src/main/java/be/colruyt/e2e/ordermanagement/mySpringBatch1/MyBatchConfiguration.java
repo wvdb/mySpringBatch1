@@ -3,7 +3,9 @@ package be.colruyt.e2e.ordermanagement.mySpringBatch1;
 import be.colruyt.e2e.ordermanagement.mySpringBatch1.controller.CustomerItemLowerCaseProcessor;
 import be.colruyt.e2e.ordermanagement.mySpringBatch1.controller.CustomerItemUpperCaseProcessor;
 import be.colruyt.e2e.ordermanagement.mySpringBatch1.controller.JobCompletionNotificationListener;
+import be.colruyt.e2e.ordermanagement.mySpringBatch1.controller.KafkaItemWriteListener;
 import be.colruyt.e2e.ordermanagement.mySpringBatch1.model.Customer;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -29,6 +31,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableBatchProcessing
+@Slf4j
 public class MyBatchConfiguration {
     @Autowired
     public JobBuilderFactory jobBuilderFactory;
@@ -39,7 +42,8 @@ public class MyBatchConfiguration {
     @Value("${app.springBatchInputFileName}")
     private Resource inputFileResource;
 
-    private static KafkaTemplate<String, Customer> kafkaTemplate;
+    @Autowired
+    private KafkaTemplate<String, Customer> kafkaTemplate;
 
     @Bean
     public FlatFileItemReader<Customer> reader() {
@@ -119,6 +123,7 @@ public class MyBatchConfiguration {
                 .reader(reader())
                 .processor(lowerCaseProcessor())
                 .writer(writer)
+                .listener(new KafkaItemWriteListener())
                 .build();
     }
 
