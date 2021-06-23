@@ -12,7 +12,7 @@ public class CustomerItemLowerCaseProcessor extends CustomerItemProcessor implem
         Customer outputCustomer = new Customer(inputCustomer.getCustomerId(), inputCustomer.getFirstName().toLowerCase(), inputCustomer.getLastName().toLowerCase(), inputCustomer.getCustomerCreationDate());
 
         if (isCustomerValid(outputCustomer)) {
-            log.info("Converted (" + inputCustomer + ") into (" + outputCustomer + ")");
+            log.debug("Converted (" + inputCustomer + ") into (" + outputCustomer + ")");
         }
         else {
             outputCustomer = null;
