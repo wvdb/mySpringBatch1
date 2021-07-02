@@ -9,6 +9,7 @@ import org.springframework.batch.core.configuration.annotation.EnableBatchProces
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
@@ -17,14 +18,18 @@ import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.kafka.KafkaItemWriter;
 import org.springframework.batch.item.kafka.builder.KafkaItemWriterBuilder;
+import org.springframework.batch.item.support.CompositeItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.kafka.core.KafkaTemplate;
 
 import javax.sql.DataSource;
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableBatchProcessing
@@ -44,6 +49,9 @@ public class MyBatchConfiguration {
 
     @Autowired
     private KafkaTemplate<String, Customer> kafkaTemplate;
+
+    @Autowired
+    DataSource dataSource;
 
     @Bean(name = "customerItemReaderStep1")
     public FlatFileItemReader<Customer> customerItemReaderStep1() {
@@ -86,6 +94,13 @@ public class MyBatchConfiguration {
         return new CustomerItemDummyProcessor();
     }
 
+//    @Bean
+//    public DataSource dataSource() {
+//        return new EmbeddedDatabaseBuilder()
+//                .setType(EmbeddedDatabaseType.HSQL)
+//                .build();
+//    }
+
     @Bean(name = "JdbcBatchItemWriter")
     public JdbcBatchItemWriter<Customer> writer(DataSource dataSource) {
         return new JdbcBatchItemWriterBuilder<Customer>()
@@ -93,6 +108,21 @@ public class MyBatchConfiguration {
                 .sql("INSERT INTO customer (first_name, last_name) VALUES (:firstName, :lastName)")
                 .dataSource(dataSource)
                 .build();
+    }
+
+    public ItemWriter<Customer> customerItemWriter1() {
+        return new CustomerItemWriter1(dataSource);
+    }
+
+    public ItemWriter<Customer> customerItemWriter2() {
+        return new CustomerItemWriter2(dataSource);
+    }
+
+    @Bean(name = "CompositeItemWriter")
+    public CompositeItemWriter<Customer> itemWriter() {
+        CompositeItemWriter<Customer> compositeItemWriter = new CompositeItemWriter<>();
+        compositeItemWriter.setDelegates(Arrays.asList(customerItemWriter1(), customerItemWriter2()));
+        return compositeItemWriter;
     }
 
     @Bean(name = "KafkaItemWriter")
@@ -108,9 +138,10 @@ public class MyBatchConfiguration {
         return jobBuilderFactory.get("importCustomerJob")
                 .incrementer(new RunIdIncrementer())
                 .listener(listener)
-                .start(step1)
-                .next(step2)
-                .next(step3)
+//                .start(step1)
+//                .next(step2)
+//                .next(step3)
+                .start(step2)
                 .build();
     }
 
@@ -125,12 +156,15 @@ public class MyBatchConfiguration {
     }
 
     @Bean
-    public Step step2(JdbcBatchItemWriter<Customer> writer) {
+    public Step step2(CompositeItemWriter<Customer> compositeItemWriter) {
         return stepBuilderFactory.get("step2")
-                .<Customer, Customer>chunk(10)
+                .<Customer, Customer>chunk(5)
                 .reader(customerItemReaderStep1())
                 .processor(lowerCaseProcessor())
-                .writer(writer)
+                .writer(compositeItemWriter)
+                .faultTolerant()
+                .skip(IllegalArgumentException.class)
+                .skipLimit(3)
                 .build();
     }
 
@@ -145,5 +179,45 @@ public class MyBatchConfiguration {
                 .build();
     }
 
+    public static class CustomerItemWriter1 implements ItemWriter<Customer> {
+
+        private JdbcTemplate jdbcTemplate;
+
+        public CustomerItemWriter1(DataSource dataSource) {
+            this.jdbcTemplate = new JdbcTemplate(dataSource);
+        }
+
+        @Override
+        public void write(List<? extends Customer> customers) {
+            for (Customer customer : customers) {
+                log.info("CustomerItemWriter1: customer = {} ", customer);
+                jdbcTemplate.update(String.format("INSERT INTO customer (first_name, last_name) VALUES ('%s', '%s')", customer.getFirstName(), customer.getLastName()));
+            }
+        }
+    }
+
+    public static class CustomerItemWriter2 implements ItemWriter<Customer> {
+
+        private JdbcTemplate jdbcTemplate;
+
+        public CustomerItemWriter2(DataSource dataSource) {
+            this.jdbcTemplate = new JdbcTemplate(dataSource);
+        }
+
+        @Override
+        public void write(List<? extends Customer> customers) {
+            for (Customer customer : customers) {
+                log.info("CustomerItemWriter2: customer = {} ", customer);
+                jdbcTemplate.update(String.format("INSERT INTO customer_bis (first_name, last_name) VALUES ('%s', '%s')", customer.getFirstName(), customer.getLastName()));
+
+                if (customer.getFirstName().equals("floriaan5")) {
+                    throw new IllegalArgumentException("foutje bedankt");
+                }
+                //                if ("foo".equalsIgnoreCase(customer.getLastName())) {
+//                    jdbcTemplate.update("UPDATE people SET name = 'foo!!' WHERE id = 1");
+//                }
+            }
+        }
+    }
 }
 

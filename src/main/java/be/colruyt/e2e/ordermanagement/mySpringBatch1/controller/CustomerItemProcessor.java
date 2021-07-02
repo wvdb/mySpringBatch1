@@ -16,7 +16,7 @@ public class CustomerItemProcessor {
 
     protected boolean isCustomerValid(Customer customer) {
         Set<ConstraintViolation<Customer>> violations = validator.validate(customer);
-        boolean isValid = true;
+        boolean isValid;
 
         if (violations.isEmpty()) {
             isValid = !customer.getLastName().toLowerCase().startsWith("trump");

@@ -9,7 +9,8 @@ import org.springframework.context.annotation.PropertySource;
 public class MySpringBatch1Application {
 
 	public static void main(String[] args) {
-		System.exit(SpringApplication.exit(SpringApplication.run(MySpringBatch1Application.class, args)));
+//		System.exit(SpringApplication.exit(SpringApplication.run(MySpringBatch1Application.class, args)));
+		SpringApplication.run(MySpringBatch1Application.class, args);
 	}
 
 }
