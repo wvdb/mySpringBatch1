@@ -29,10 +29,14 @@ public class Customer implements org.apache.kafka.common.serialization.Serialize
 
     private ZonedDateTime customerCreationDate = ZonedDateTime.now();
 
-//    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    // Items is an association managed with Spring Data Rest (SDR): a repo exists
+    @OneToMany(mappedBy = "customer")
+    private Set<Item> items;
+
+    // Purchase is an association managed with JPA: NO repo exists
     @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
     @JoinColumn(name = "customer_id", nullable = false)
-    private Set<Item> items;
+    private Set<Purchase> purchases;
 
     public Customer(String firstName, String lastName) {
         this.firstName = firstName;

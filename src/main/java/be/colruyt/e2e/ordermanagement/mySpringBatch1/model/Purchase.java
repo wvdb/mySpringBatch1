@@ -4,7 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 
@@ -12,14 +15,10 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Item implements Serializable {
+public class Purchase implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private int itemId;
-
-    @ManyToOne
-    @JoinColumn(name="customer_id")
-    private Customer customer;
+    private int purchaseId;
 
     @NotEmpty()
     private String name;
