@@ -30,7 +30,7 @@ public class Customer implements org.apache.kafka.common.serialization.Serialize
     private ZonedDateTime customerCreationDate = ZonedDateTime.now();
 
     // Items is an association managed with Spring Data Rest (SDR): a repo exists
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer", orphanRemoval = true)
     private Set<Item> items;
 
     // Purchase is an association managed with JPA: NO repo exists
