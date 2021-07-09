@@ -23,4 +23,8 @@ public class Item implements Serializable {
 
     @NotEmpty()
     private String name;
+
+    public Item(String name) {
+        this.name = name;
+    }
 }

@@ -2,6 +2,7 @@ package be.colruyt.e2e.ordermanagement.mySpringBatch1;
 
 import be.colruyt.e2e.ordermanagement.mySpringBatch1.model.Customer;
 import be.colruyt.e2e.ordermanagement.mySpringBatch1.model.Item;
+import be.colruyt.e2e.ordermanagement.mySpringBatch1.model.Post;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -20,7 +21,7 @@ public class MySpringBatch1Application  {
 
 		RepositoryRestConfiguration restConfiguration = ctx.getBean(RepositoryRestConfiguration.class);
 
-		restConfiguration.exposeIdsFor(Customer.class, Item.class);
+		restConfiguration.exposeIdsFor(Customer.class, Item.class, Post.class);
 	}
 
 }

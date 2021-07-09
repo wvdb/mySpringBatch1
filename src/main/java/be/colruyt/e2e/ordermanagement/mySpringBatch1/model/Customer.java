@@ -38,6 +38,10 @@ public class Customer implements org.apache.kafka.common.serialization.Serialize
     @JoinColumn(name = "customer_id", nullable = false)
     private Set<Purchase> purchases;
 
+    @ElementCollection(fetch=FetchType.EAGER)
+    @CollectionTable(name = "post", joinColumns = @JoinColumn(name = "customer_id"))
+    private Set<Post> posts;
+
     public Customer(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
