@@ -33,14 +33,26 @@ public class Customer implements org.apache.kafka.common.serialization.Serialize
     @OneToMany(mappedBy = "customer", orphanRemoval = true)
     private Set<Item> items;
 
-    // Purchase is an association managed with JPA: NO repo exists
+    // Purchases is an association managed with JPA: NO repo exists
     @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
     @JoinColumn(name = "customer_id", nullable = false)
     private Set<Purchase> purchases;
 
+    // Posts is an association managed with JPA (embeddable): NO repo exists
     @ElementCollection(fetch=FetchType.EAGER)
     @CollectionTable(name = "post", joinColumns = @JoinColumn(name = "customer_id"))
     private Set<Post> posts;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "purchase_item",
+            joinColumns = @JoinColumn(name = "customer_id"),
+            inverseJoinColumns = @JoinColumn(name = "item_id"))
+    private Set<ItemBis> itemsBis;
+
+    // PurchasedItems is an association managed with JPA (embeddable): NO repo exists
+    @ElementCollection(fetch=FetchType.EAGER)
+    @CollectionTable(name = "purchase_item_complex", joinColumns = @JoinColumn(name = "customer_id"))
+    private Set<PurchaseItemComplex> purchasedItems;
 
     public Customer(String firstName, String lastName) {
         this.firstName = firstName;
