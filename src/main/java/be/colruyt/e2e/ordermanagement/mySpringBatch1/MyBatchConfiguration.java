@@ -210,9 +210,9 @@ public class MyBatchConfiguration {
                 log.info("CustomerItemWriter2: customer = {} ", customer);
                 jdbcTemplate.update(String.format("INSERT INTO customer_bis (first_name, last_name) VALUES ('%s', '%s')", customer.getFirstName(), customer.getLastName()));
 
-                if (customer.getFirstName().equals("floriaan5")) {
-                    throw new IllegalArgumentException("foutje bedankt");
-                }
+//                if (customer.getFirstName().equals("floriaan5")) {
+//                    throw new IllegalArgumentException("foutje bedankt");
+//                }
                 //                if ("foo".equalsIgnoreCase(customer.getLastName())) {
 //                    jdbcTemplate.update("UPDATE people SET name = 'foo!!' WHERE id = 1");
 //                }
