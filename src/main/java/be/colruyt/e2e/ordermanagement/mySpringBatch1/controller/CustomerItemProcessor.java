@@ -19,7 +19,13 @@ public class CustomerItemProcessor {
         boolean isValid;
 
         if (violations.isEmpty()) {
-            isValid = !customer.getLastName().toLowerCase().startsWith("trump");
+           isValid = !customer.getLastName().toLowerCase().startsWith("trump");
+            if (isValid)  {
+                log.info("Customer {} {} is valid.", customer.getFirstName(), customer.getLastName());
+            }
+            else {
+                log.error("Customer {} {} is not valid.", customer.getFirstName(), customer.getLastName());
+            }
         }
         else {
             log.error("Validation Customer {} failed with violations {}.", customer, violations);

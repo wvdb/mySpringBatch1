@@ -66,6 +66,7 @@ public class MySpringBatch1ApplicationTest {
 		@Autowired
 		public StepBuilderFactory stepBuilderFactory;
 
+		@Bean
 		public ItemWriter<Customer> customerItemWriter1() {
 			return new CustomerItemWriter1();
 		}
@@ -86,7 +87,7 @@ public class MySpringBatch1ApplicationTest {
 		@Bean
 		public Step step() {
 			return stepBuilderFactory.get("step1")
-					.<Customer, Customer>chunk(10)
+					.<Customer, Customer>chunk(5)
 					.reader(customerItemReaderStep1())
 					.writer(customerItemWriter1())
 					.build();

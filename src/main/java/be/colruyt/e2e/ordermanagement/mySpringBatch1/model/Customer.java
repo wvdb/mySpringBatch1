@@ -21,7 +21,7 @@ public class Customer implements org.apache.kafka.common.serialization.Serialize
     private int customerId;
 
     @NotEmpty()
-    @Size(min = 4, message = "First-name must be of min 4 characters")
+//    @Size(min = 4, message = "First-name must be of min 4 characters")
     private String firstName;
 
     @NotEmpty()

@@ -44,6 +44,9 @@ public class MyBatchConfiguration {
     @Value("${app.springBatchInputFileNameStep1}")
     private Resource inputFileResourceStep1;
 
+    @Value("${app.springBatchInputFileNameStep1}")
+    private Resource inputFileResourceStep2;
+
     @Value("${app.springBatchInputFileNameStep3}")
     private Resource inputFileResourceStep3;
 
@@ -58,6 +61,19 @@ public class MyBatchConfiguration {
         return new FlatFileItemReaderBuilder<Customer>()
                 .name("customerItemReaderStep1")
                 .resource(inputFileResourceStep1)
+                .delimited()
+                .names("firstName", "lastName")
+                .fieldSetMapper(new BeanWrapperFieldSetMapper<Customer>() {{
+                    setTargetType(Customer.class);
+                }})
+                .build();
+    }
+
+    @Bean(name = "customerItemReaderStep2")
+    public FlatFileItemReader<Customer> customerItemReaderStep2() {
+        return new FlatFileItemReaderBuilder<Customer>()
+                .name("customerItemReaderStep2")
+                .resource(inputFileResourceStep2)
                 .delimited()
                 .names("firstName", "lastName")
                 .fieldSetMapper(new BeanWrapperFieldSetMapper<Customer>() {{
@@ -121,7 +137,8 @@ public class MyBatchConfiguration {
     @Bean(name = "CompositeItemWriter")
     public CompositeItemWriter<Customer> itemWriter() {
         CompositeItemWriter<Customer> compositeItemWriter = new CompositeItemWriter<>();
-        compositeItemWriter.setDelegates(Arrays.asList(customerItemWriter1(), customerItemWriter2()));
+//        compositeItemWriter.setDelegates(Arrays.asList(customerItemWriter1(), customerItemWriter2()));
+        compositeItemWriter.setDelegates(Arrays.asList(customerItemWriter1()));
         return compositeItemWriter;
     }
 
@@ -159,7 +176,7 @@ public class MyBatchConfiguration {
     public Step step2(CompositeItemWriter<Customer> compositeItemWriter) {
         return stepBuilderFactory.get("step2")
                 .<Customer, Customer>chunk(5)
-                .reader(customerItemReaderStep1())
+                .reader(customerItemReaderStep2())
                 .processor(lowerCaseProcessor())
                 .writer(compositeItemWriter)
                 .faultTolerant()
@@ -189,6 +206,7 @@ public class MyBatchConfiguration {
 
         @Override
         public void write(List<? extends Customer> customers) {
+            log.info("CustomerItemWriter starting");
             for (Customer customer : customers) {
                 log.info("CustomerItemWriter1: customer = {} ", customer);
                 jdbcTemplate.update(String.format("INSERT INTO customer (first_name, last_name) VALUES ('%s', '%s')", customer.getFirstName(), customer.getLastName()));
