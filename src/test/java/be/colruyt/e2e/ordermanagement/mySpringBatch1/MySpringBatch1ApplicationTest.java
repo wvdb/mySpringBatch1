@@ -1,9 +1,8 @@
 package be.colruyt.e2e.ordermanagement.mySpringBatch1;
 
 import be.colruyt.e2e.ordermanagement.mySpringBatch1.model.Customer;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.Job;
@@ -17,8 +16,10 @@ import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.test.JobLauncherTestUtils;
+import org.springframework.batch.test.context.SpringBatchTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
@@ -29,9 +30,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
+@SpringBatchTest
+@EnableAutoConfiguration
 @ContextConfiguration(classes = {MySpringBatch1ApplicationTest.JobConfiguration.class})
 @TestPropertySource(value = {"classpath:application.properties"})
-@Slf4j
 public class MySpringBatch1ApplicationTest {
 
 	@Autowired
@@ -112,7 +114,7 @@ public class MySpringBatch1ApplicationTest {
 			@Override
 			public void write(List<? extends Customer> customers) {
 				for (Customer customer : customers) {
-					log.info("CustomerItemWriter1: customer = {} ", customer);
+					System.out.println("CustomerItemWriter1: customer = " +  customer);
 				}
 			}
 		}
