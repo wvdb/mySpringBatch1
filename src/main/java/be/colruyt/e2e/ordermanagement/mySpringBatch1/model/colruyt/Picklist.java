@@ -45,14 +45,16 @@ public class Picklist implements Serializable {
 	@Column(name="PICKLIST_ID")
 	private long picklistId;
 
-//	//ASSOCIATION relation to parent WrsCollectpoint
-//	@ManyToOne(optional=true, fetch=FetchType.LAZY)
-//	@JoinColumn(referencedColumnName="WRS_COLLECTPOINT_ID")
-//	private WrsCollectpoint wrsCollectpoint;
+	//ASSOCIATION relation to parent WrsCollectpoint
+	@ManyToOne(optional=true, fetch=FetchType.LAZY)
+	@JoinColumn(name="COLLECTPOINT_ID", referencedColumnName="WRS_COLLECTPOINT_ID")
+	private WrsCollectpoint wrsCollectpoint;
 
 	//ASSOCIATION relation to parent WrsCollectpoint ("Duplicate" parent columns in child to
 	//	                               allow attaching to parent without reading the parent)
 	@Column(name="COLLECTPOINT_ID",
+			insertable = false,
+			updatable = false,
 			nullable=false)
 	private long collectpointId;
 
