@@ -2,9 +2,9 @@ package be.colruyt.e2e.ordermanagement.mySpringBatch1;
 
 import be.colruyt.e2e.ordermanagement.mySpringBatch1.controller.*;
 import be.colruyt.e2e.ordermanagement.mySpringBatch1.model.Customer;
+import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.Step;
+import org.springframework.batch.core.*;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
@@ -20,14 +20,26 @@ import org.springframework.batch.item.kafka.KafkaItemWriter;
 import org.springframework.batch.item.kafka.builder.KafkaItemWriterBuilder;
 import org.springframework.batch.item.support.CompositeItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.Resource;
+import org.springframework.data.transaction.ChainedTransactionManager;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.interceptor.DefaultTransactionAttribute;
 
 import javax.sql.DataSource;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -52,9 +64,6 @@ public class MyBatchConfiguration {
 
     @Autowired
     private KafkaTemplate<String, Customer> kafkaTemplate;
-
-    @Autowired
-    DataSource dataSource;
 
     @Bean(name = "customerItemReaderStep1")
     public FlatFileItemReader<Customer> customerItemReaderStep1() {
@@ -110,15 +119,8 @@ public class MyBatchConfiguration {
         return new CustomerItemDummyProcessor();
     }
 
-//    @Bean
-//    public DataSource dataSource() {
-//        return new EmbeddedDatabaseBuilder()
-//                .setType(EmbeddedDatabaseType.HSQL)
-//                .build();
-//    }
-
-    @Bean(name = "JdbcBatchItemWriter")
-    public JdbcBatchItemWriter<Customer> writer(DataSource dataSource) {
+    @Bean(name = "writer1")
+    public JdbcBatchItemWriter<Customer> writer1(@Qualifier("ORACLE_DataSource") DataSource dataSource) {
         return new JdbcBatchItemWriterBuilder<Customer>()
                 .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
                 .sql("INSERT INTO customer (first_name, last_name) VALUES (:firstName, :lastName)")
@@ -126,19 +128,19 @@ public class MyBatchConfiguration {
                 .build();
     }
 
-    public ItemWriter<Customer> customerItemWriter1() {
-        return new CustomerItemWriter1(dataSource);
-    }
-
-    public ItemWriter<Customer> customerItemWriter2() {
-        return new CustomerItemWriter2(dataSource);
+    @Bean(name = "writer2")
+    public JdbcBatchItemWriter<Customer> writer2(@Qualifier("MySQL_DataSource") DataSource dataSource) {
+        return new JdbcBatchItemWriterBuilder<Customer>()
+                .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
+                .sql("INSERT INTO customer_bis (first_name, last_name) VALUES (:firstName, :lastName)")
+                .dataSource(dataSource)
+                .build();
     }
 
     @Bean(name = "CompositeItemWriter")
-    public CompositeItemWriter<Customer> itemWriter() {
+    public CompositeItemWriter<Customer> txnWriter() {
         CompositeItemWriter<Customer> compositeItemWriter = new CompositeItemWriter<>();
-//        compositeItemWriter.setDelegates(Arrays.asList(customerItemWriter1(), customerItemWriter2()));
-        compositeItemWriter.setDelegates(Arrays.asList(customerItemWriter1()));
+        compositeItemWriter.setDelegates(Arrays.asList(writer1(null), writer2(null)));
         return compositeItemWriter;
     }
 
@@ -154,6 +156,7 @@ public class MyBatchConfiguration {
     public Job importCustomerJob(JobCompletionNotificationListener listener, Step step1, Step step2, Step step3) {
         return jobBuilderFactory.get("importCustomerJob")
                 .incrementer(new RunIdIncrementer())
+                .validator(parametersValidator())
                 .listener(listener)
 //                .start(step1)
 //                .next(step2)
@@ -162,80 +165,59 @@ public class MyBatchConfiguration {
                 .build();
     }
 
-    @Bean
-    public Step step1(JdbcBatchItemWriter<Customer> writer) {
-        return stepBuilderFactory.get("step1")
-                .<Customer, Customer>chunk(10)
-                .reader(customerItemReaderStep1())
-                .processor(upperCaseProcessor())
-                .writer(writer)
-                .build();
+    private JobParametersValidator parametersValidator() {
+        return new JobParametersValidator() {
+            @Override
+            public void validate(JobParameters parameters) throws JobParametersInvalidException {
+                try {
+                    if (inputFileResourceStep2.contentLength() == 0) {
+                        throw new JobParametersInvalidException("The file is empty.");
+                    }
+                } catch (IOException e) {
+                    throw new JobParametersInvalidException("The file might be empty.");
+                }
+            }
+        };
     }
 
+//    @Bean
+//    public Step step1(JdbcBatchItemWriter<Customer> writer1) {
+//        return stepBuilderFactory.get("step1")
+//                .<Customer, Customer>chunk(10)
+//                .reader(customerItemReaderStep1())
+//                .processor(upperCaseProcessor())
+//                .writer(writer1)
+//                .build();
+//    }
+
     @Bean
-    public Step step2(CompositeItemWriter<Customer> compositeItemWriter) {
+    public Step step2(@Qualifier("chainTxManager") PlatformTransactionManager transactionManager) {
+        DefaultTransactionAttribute txAttribute = new DefaultTransactionAttribute();
+        txAttribute.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        txAttribute.setIsolationLevel(TransactionDefinition.ISOLATION_READ_COMMITTED);
+        txAttribute.setTimeout(600);
+
         return stepBuilderFactory.get("step2")
+                .transactionManager(transactionManager)
                 .<Customer, Customer>chunk(5)
+                .faultTolerant()
                 .reader(customerItemReaderStep2())
                 .processor(lowerCaseProcessor())
-                .writer(compositeItemWriter)
-                .faultTolerant()
-                .skip(IllegalArgumentException.class)
-                .skipLimit(3)
+                .writer(txnWriter())
+                .transactionAttribute(txAttribute)
                 .build();
     }
 
-    @Bean
-    public Step step3(KafkaItemWriter<String, Customer> writer) {
-        return stepBuilderFactory.get("step3")
-                .<Customer, Customer>chunk(5)
-                .reader(customerItemReaderStep3())
-                .processor(dummyProcessor())
-                .writer(writer)
-                .listener(new KafkaItemWriteListener())
-                .build();
-    }
+//    @Bean
+//    public Step step3(KafkaItemWriter<String, Customer> writer) {
+//        return stepBuilderFactory.get("step3")
+//                .<Customer, Customer>chunk(5)
+//                .reader(customerItemReaderStep3())
+//                .processor(dummyProcessor())
+//                .writer(writer)
+//                .listener(new KafkaItemWriteListener())
+//                .build();
+//    }
 
-    public static class CustomerItemWriter1 implements ItemWriter<Customer> {
-
-        private JdbcTemplate jdbcTemplate;
-
-        public CustomerItemWriter1(DataSource dataSource) {
-            this.jdbcTemplate = new JdbcTemplate(dataSource);
-        }
-
-        @Override
-        public void write(List<? extends Customer> customers) {
-            log.info("CustomerItemWriter starting");
-            for (Customer customer : customers) {
-                log.info("CustomerItemWriter1: customer = {} ", customer);
-                jdbcTemplate.update(String.format("INSERT INTO customer (first_name, last_name) VALUES ('%s', '%s')", customer.getFirstName(), customer.getLastName()));
-            }
-        }
-    }
-
-    public static class CustomerItemWriter2 implements ItemWriter<Customer> {
-
-        private JdbcTemplate jdbcTemplate;
-
-        public CustomerItemWriter2(DataSource dataSource) {
-            this.jdbcTemplate = new JdbcTemplate(dataSource);
-        }
-
-        @Override
-        public void write(List<? extends Customer> customers) {
-            for (Customer customer : customers) {
-                log.info("CustomerItemWriter2: customer = {} ", customer);
-                jdbcTemplate.update(String.format("INSERT INTO customer_bis (first_name, last_name) VALUES ('%s', '%s')", customer.getFirstName(), customer.getLastName()));
-
-//                if (customer.getFirstName().equals("floriaan5")) {
-//                    throw new IllegalArgumentException("foutje bedankt");
-//                }
-                //                if ("foo".equalsIgnoreCase(customer.getLastName())) {
-//                    jdbcTemplate.update("UPDATE people SET name = 'foo!!' WHERE id = 1");
-//                }
-            }
-        }
-    }
 }
 

@@ -15,13 +15,13 @@ public class MySpringBatch1Application  {
 
 	public static void main(String[] args) {
 		// flavor 1: run spring batch and quit
-		System.exit(SpringApplication.exit(SpringApplication.run(MySpringBatch1Application.class, args)));
-		SpringApplication.run(MySpringBatch1Application.class, args);
+//		System.exit(SpringApplication.exit(SpringApplication.run(MySpringBatch1Application.class, args)));
+//		SpringApplication.run(MySpringBatch1Application.class, args);
 
 		// flavor 2: start spring boot and usage spring-data-rest controllers
-//		ConfigurableApplicationContext ctx = SpringApplication.run(MySpringBatch1Application.class, args);
-//		RepositoryRestConfiguration restConfiguration = ctx.getBean(RepositoryRestConfiguration.class);
-//		restConfiguration.exposeIdsFor(Customer.class, Item.class, Post.class);
+		ConfigurableApplicationContext ctx = SpringApplication.run(MySpringBatch1Application.class, args);
+		RepositoryRestConfiguration restConfiguration = ctx.getBean(RepositoryRestConfiguration.class);
+		restConfiguration.exposeIdsFor(Customer.class, Item.class, Post.class);
 	}
 
 }
