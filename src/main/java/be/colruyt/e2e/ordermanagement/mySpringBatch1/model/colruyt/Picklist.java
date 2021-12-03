@@ -106,17 +106,18 @@ public class Picklist implements Serializable {
 			, nullable = false) // column in parent table CARRIER_TYPE
     private CarrierType carrierType;
     
-    //COMPOSITION relation to PicklistLine
-//    @OneToMany(targetEntity = PicklistLine.class,
-//            fetch        = FetchType.LAZY,   /* !! can be made EAGER for a query by adding fetchgroup Picklist.FETCHGROUP_PICKLISTLINES */
-//            mappedBy     = "picklist",       /* Join columns to be found in this attribute of child */
-//      	    cascade      = CascadeType.ALL,  /* entrie(s) in list can be added/modified (child must be added/modified) */
-//            orphanRemoval= true)             /* entrie(s) in list can be removed, in that case also remove child itself (if no new parent was assigned) */
-//    /* No join columns : mappedBy tells us to find join in child */
-//    @OrderBy("id.picklistLineNr ASC")        // sort on expected picking order
-//    @KeyColumn(name="PICKLIST_LINE_NR")
-//	private SortedMap<Long,PicklistLine> picklistLines;
-    
+//    COMPOSITION relation to PicklistLine
+    @OneToMany(targetEntity = PicklistLine.class,
+            fetch        = FetchType.LAZY,   /* !! can be made EAGER for a query by adding fetchgroup Picklist.FETCHGROUP_PICKLISTLINES */
+      	    cascade      = CascadeType.ALL,  /* entrie(s) in list can be added/modified (child must be added/modified) */
+            orphanRemoval= true)             /* entrie(s) in list can be removed, in that case also remove child itself (if no new parent was assigned) */
+    @OrderBy("id.picklistLineNr ASC")        // sort on expected picking order
+	@JoinColumns(
+			{
+					@JoinColumn(name="PICKLIST_ID", referencedColumnName="PICKLIST_ID")
+			}
+	)
+	private Map<Long,PicklistLine> picklistLines;
 
     //COMPOSITION relation to PicklistFfOrder
 //    @OneToMany(targetEntity = PicklistFfOrder.class,
@@ -147,14 +148,12 @@ public class Picklist implements Serializable {
 		this.picklistId = picklistId;
 	}
 
-//	public WrsCollectpoint getWrsCollectpoint() {
-//		return wrsCollectpoint;
-//	}
-//	/* maintaining relation via parent columns, not via object to avoid the need to read it)
-//	public void setWrsCollectpoint(WrsCollectpoint wrsCollectpoint) {
-//		this.wrsCollectpoint = wrsCollectpoint;
-//	}
-//	*/
+	public WrsCollectpoint getWrsCollectpoint() {
+		return wrsCollectpoint;
+	}
+	public void setWrsCollectpoint(WrsCollectpoint wrsCollectpoint) {
+		this.wrsCollectpoint = wrsCollectpoint;
+	}
 
 	public long getCollectpointId() {
 		return this.collectpointId;
