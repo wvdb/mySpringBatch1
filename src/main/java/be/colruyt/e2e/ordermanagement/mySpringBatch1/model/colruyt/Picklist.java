@@ -86,18 +86,22 @@ public class Picklist implements Serializable {
 
 	//ASSOCIATION relation to parent PicklistKind
 	@ManyToOne(optional=true, fetch=FetchType.LAZY)
-	@JoinColumn(referencedColumnName="KIND") // column in parent table PICKLIST_KIND
+	@JoinColumn(name="PICKLIST_KIND", referencedColumnName="KIND", nullable = false) // column in parent table PICKLIST_KIND
 	private PicklistKind picklistKind;
 
 	//ASSOCIATION relation to parent PicklistKind ("Duplicate" parent columns in child to
 	//                                              allow attaching to parent without reading the parent)
 	@Column(name="PICKLIST_KIND",
-			nullable=false)
+			insertable = false,
+			updatable = false,
+			nullable = false)
 	private String picklistKindCode;
 	
 	//ASSOCIATION relation to parent CarrierType
     @ManyToOne(optional=true, fetch=FetchType.LAZY)
-    @JoinColumn(referencedColumnName="CARRIER_TYPE") // column in parent table CARRIER_TYPE
+    @JoinColumn(name="CARRIER_TYPE"
+			, referencedColumnName="CARRIER_TYPE"
+			, nullable = false) // column in parent table CARRIER_TYPE
     private CarrierType carrierType;
     
     //COMPOSITION relation to PicklistLine

@@ -97,13 +97,13 @@ public class PicklistKind implements Serializable {
 	//ASSOCIATION relation to parent FfOrderTreatment
     @ManyToOne(optional=true,
                fetch=FetchType.LAZY)
-    @JoinColumn(referencedColumnName="TREATMENT")  // column in parent table FF_ORDER_TREATMENT
+    @JoinColumn(name="TREATMENT", referencedColumnName="TREATMENT")  // column in parent table FF_ORDER_TREATMENT
      private FfOrderTreatment ffOrderTreatment;
 
     //ASSOCIATION relation to parent PicklistCompositionType 
     @ManyToOne(optional=true,
                fetch   =FetchType.LAZY)
-    @JoinColumn(referencedColumnName="COMPOSITION_TYPE")  // column in parent table PICKLIST_COMPOSITION_TYPE
+    @JoinColumn(name="COMPOSITION_TYPE", referencedColumnName="COMPOSITION_TYPE")  // column in parent table PICKLIST_COMPOSITION_TYPE
     private PicklistCompositionType compositionType;
     
 	//COMPOSITION relation to PicklistKindName
