@@ -9,13 +9,13 @@ import java.util.Map;
  * The persistent class for the WRS_COLLECTPOINT database table.
  * 
  */
-@NamedQueries ({
-	@NamedQuery(name  = WrsCollectpoint.SEL_CP_BY_BRANCHNR,
-			    query = WrsCollectpoint.QUERY_SEL_CP_BY_BRANCHNR),
-	@NamedQuery(name  = WrsCollectpoint.SEL_CP_WITH_FFOPART_BY_FFLOC_AND_KIND_AND_COLLECTDATE,
-			    query = WrsCollectpoint.QUERY_SEL_CP_WITH_FFOPART_BY_FFLOC_AND_KIND_AND_COLLECTDATE)
-
-})
+//@NamedQueries ({
+//	@NamedQuery(name  = WrsCollectpoint.SEL_CP_BY_BRANCHNR,
+//			    query = WrsCollectpoint.QUERY_SEL_CP_BY_BRANCHNR),
+//	@NamedQuery(name  = WrsCollectpoint.SEL_CP_WITH_FFOPART_BY_FFLOC_AND_KIND_AND_COLLECTDATE,
+//			    query = WrsCollectpoint.QUERY_SEL_CP_WITH_FFOPART_BY_FFLOC_AND_KIND_AND_COLLECTDATE)
+//
+//})
 
 
 @Entity
@@ -51,14 +51,14 @@ public class WrsCollectpoint implements Serializable {
 	*/
 
     //COMPOSITION relation to WrsCollectpointName
-    @ElementCollection(fetch=FetchType.EAGER,
-    		           targetClass= WrsCollectpointName.class)
-    @CollectionTable(joinColumns=@JoinColumn(referencedColumnName="WRS_COLLECTPOINT_ID",   //in parent XCOLLECTPOINT tabel
-			     			 			     name                ="WRS_COLLECTPOINT_ID"  ) //in child XCOLLECTPOINT_NAME tabel
-    	             ) 
-    @JoinColumn(name="ISO_LANG_CODE")
-//	@ReadOnly(UpdateAction.RESTRICT)
-	private Map<String, WrsCollectpointName> wrsCollectpointNames;
+//    @ElementCollection(fetch=FetchType.EAGER,
+//    		           targetClass= WrsCollectpointName.class)
+//    @CollectionTable(joinColumns=@JoinColumn(referencedColumnName="WRS_COLLECTPOINT_ID",   //in parent XCOLLECTPOINT tabel
+//			     			 			     name                ="WRS_COLLECTPOINT_ID"  ) //in child XCOLLECTPOINT_NAME tabel
+//    	             )
+//    @JoinColumn(referencedColumnName="ISO_LANG_CODE")
+////	@ReadOnly(UpdateAction.RESTRICT)
+//	private Map<String, WrsCollectpointName> wrsCollectpointNames;
 
 	
 
@@ -80,23 +80,23 @@ public class WrsCollectpoint implements Serializable {
 		this.collectpointId = collectpointId;
 	}
 	
-	public Map<String, WrsCollectpointName> getWrsCollectpointLangs() {
-		return wrsCollectpointNames;
-	}
-	public void setWrsCollectpointLangs(Map<String, WrsCollectpointName> wrsCollectpointLangs) {
-		this.wrsCollectpointNames = wrsCollectpointLangs;
-	}
-	
-	//------------------------------------
-	//-- ADDITIONAL getters and setters --
-	//------------------------------------
-	public String getNameForIsoLangCode(String inIsoLangCode) {
-		WrsCollectpointName currentWrsCollectpointName = this.wrsCollectpointNames.get(inIsoLangCode);
-		
-		if (currentWrsCollectpointName != null) {
-			return currentWrsCollectpointName.getName();
-		} else {
-			return null;
-		}
-	}
+//	public Map<String, WrsCollectpointName> getWrsCollectpointLangs() {
+//		return wrsCollectpointNames;
+//	}
+//	public void setWrsCollectpointLangs(Map<String, WrsCollectpointName> wrsCollectpointLangs) {
+//		this.wrsCollectpointNames = wrsCollectpointLangs;
+//	}
+//
+//	//------------------------------------
+//	//-- ADDITIONAL getters and setters --
+//	//------------------------------------
+//	public String getNameForIsoLangCode(String inIsoLangCode) {
+//		WrsCollectpointName currentWrsCollectpointName = this.wrsCollectpointNames.get(inIsoLangCode);
+//
+//		if (currentWrsCollectpointName != null) {
+//			return currentWrsCollectpointName.getName();
+//		} else {
+//			return null;
+//		}
+//	}
 }

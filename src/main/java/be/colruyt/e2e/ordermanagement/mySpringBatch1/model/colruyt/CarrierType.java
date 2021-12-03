@@ -24,13 +24,13 @@ public class CarrierType implements Serializable {
     //ASSOCIATION relation to childs CarrierTypeSlot
     
     //COMPOSITION relation to CarrierTypeName
-    @OneToMany(targetEntity = CarrierTypeName.class,
-    		   fetch        = FetchType.LAZY,
-    		   cascade      = CascadeType.ALL,    /* entrie(s) in list can be added/modified (child must be added/modified) */
-               orphanRemoval= true)               /* entrie(s) in list can be removed, in that case also remove child itself (if no new parent was assigned) */ 
-    /* No join columns : mappedBy tells us to find join in child */
-    @JoinColumn(name="ISO_LANG_CODE")
-	private Set<CarrierTypeName> carrierTypeNames;
+//    @OneToMany(targetEntity = CarrierTypeName.class,
+//    		   fetch        = FetchType.LAZY,
+//    		   cascade      = CascadeType.ALL,    /* entrie(s) in list can be added/modified (child must be added/modified) */
+//               orphanRemoval= true)               /* entrie(s) in list can be removed, in that case also remove child itself (if no new parent was assigned) */
+//    /* No join columns : mappedBy tells us to find join in child */
+//    @JoinColumn(referencedColumnName="ISO_LANG_CODE")
+//	private Set<CarrierTypeName> carrierTypeNames;
     
     //-------------------------
     //-- constructors        --
@@ -56,12 +56,12 @@ public class CarrierType implements Serializable {
 		this.minSlotsAdvance = minSlotsAdvance;
 	}
 
-	public Set<CarrierTypeName> getCarrierTypeNames() {
-		return carrierTypeNames;
-	}
-
-	public void setCarrierTypeNames(Set<CarrierTypeName> carrierTypeNames) {
-		this.carrierTypeNames = carrierTypeNames;
-	}
+//	public Set<CarrierTypeName> getCarrierTypeNames() {
+//		return carrierTypeNames;
+//	}
+//
+//	public void setCarrierTypeNames(Set<CarrierTypeName> carrierTypeNames) {
+//		this.carrierTypeNames = carrierTypeNames;
+//	}
 
 }

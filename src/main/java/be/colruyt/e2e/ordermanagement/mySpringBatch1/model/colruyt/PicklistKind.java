@@ -11,10 +11,10 @@ import java.util.TreeMap;
  * The persistent class for the PICKLIST_KIND database table.
  * 
  */
-@NamedQueries ({
-	@NamedQuery(name  = PicklistKind.SEL_ALL_PICKLISTKIND,
-			    query = PicklistKind.QUERY_SEL_ALL_PICKLISTKIND)
-})
+//@NamedQueries ({
+//	@NamedQuery(name  = PicklistKind.SEL_ALL_PICKLISTKIND,
+//			    query = PicklistKind.QUERY_SEL_ALL_PICKLISTKIND)
+//})
 //@FetchGroups({
 //    @FetchGroup(name      = PicklistKind.FETCHGROUP_PICKLISTKINDNAMES,
 //    		    attributes={@FetchAttribute(name="picklistKindNames")}
@@ -97,24 +97,28 @@ public class PicklistKind implements Serializable {
 	//ASSOCIATION relation to parent FfOrderTreatment
     @ManyToOne(optional=true,
                fetch=FetchType.LAZY)
-    @JoinColumn(name                ="TREATMENT",  // column in child table PICKLIST_KIND
-                referencedColumnName="TREATMENT")  // column in parent table FF_ORDER_TREATMENT
+    @JoinColumn(referencedColumnName="TREATMENT")  // column in parent table FF_ORDER_TREATMENT
      private FfOrderTreatment ffOrderTreatment;
 
     //ASSOCIATION relation to parent PicklistCompositionType 
     @ManyToOne(optional=true,
                fetch   =FetchType.LAZY)
-    @JoinColumn(name                ="COMPOSITION_TYPE",  // column in child table  PICKLIST_KIND
-                referencedColumnName="COMPOSITION_TYPE")  // column in parent table PICKLIST_COMPOSITION_TYPE
+    @JoinColumn(referencedColumnName="COMPOSITION_TYPE")  // column in parent table PICKLIST_COMPOSITION_TYPE
     private PicklistCompositionType compositionType;
     
 	//COMPOSITION relation to PicklistKindName
-    @OneToMany(targetEntity = PicklistKindName.class, 
-               fetch        = FetchType.LAZY,
-      	       cascade      = CascadeType.ALL,    /* entrie(s) in list can be added/modified (child must be added/modified) */
-               orphanRemoval= true)               /* entrie(s) in list can be removed, in that case also remove child itself (if no new parent was assigned) */ 
-    @JoinColumn(name="ISO_LANG_CODE")
-	private Set<PicklistKindName> picklistKindNames;
+//    @OneToMany(targetEntity = PicklistKindName.class,
+//               fetch        = FetchType.LAZY,
+//      	       cascade      = CascadeType.ALL,    /* entrie(s) in list can be added/modified (child must be added/modified) */
+//               orphanRemoval= true)               /* entrie(s) in list can be removed, in that case also remove child itself (if no new parent was assigned) */
+////    @JoinColumn(referencedColumnName="ISO_LANG_CODE")
+//	@JoinColumns(
+//			{
+//					@JoinColumn(referencedColumnName="PICKLIST_KIND"),
+//					@JoinColumn(referencedColumnName="ISO_LANG_CODE")
+//			}
+//	)
+//	private Set<PicklistKindName> picklistKindNames;
 
 	
 	/* Not needed because relation is ASSOCIATION 

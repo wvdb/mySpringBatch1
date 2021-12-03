@@ -12,10 +12,10 @@ import java.util.TreeMap;
  * The persistent class for the PICKLIST database table.
  * 
  */
-@NamedQueries ({
-	@NamedQuery(name  = Picklist.SEL_PICKLIST_BY_ID,
-		        query = Picklist.QUERY_SEL_PICKLIST_BY_ID)
-})
+//@NamedQueries ({
+//	@NamedQuery(name  = Picklist.SEL_PICKLIST_BY_ID,
+//		        query = Picklist.QUERY_SEL_PICKLIST_BY_ID)
+//})
 //@FetchGroups({
 //    @FetchGroup(name      = Picklist.FETCHGROUP_PICKLISTLINES,
 //    		    attributes={@FetchAttribute(name="picklistLines")}
@@ -45,10 +45,10 @@ public class Picklist implements Serializable {
 	@Column(name="PICKLIST_ID")
 	private long picklistId;
 
-	//ASSOCIATION relation to parent WrsCollectpoint
-	@ManyToOne(optional=true, fetch=FetchType.LAZY)
-	@JoinColumn(referencedColumnName="WRS_COLLECTPOINT_ID")
-	private WrsCollectpoint wrsCollectpoint;
+//	//ASSOCIATION relation to parent WrsCollectpoint
+//	@ManyToOne(optional=true, fetch=FetchType.LAZY)
+//	@JoinColumn(referencedColumnName="WRS_COLLECTPOINT_ID")
+//	private WrsCollectpoint wrsCollectpoint;
 
 	//ASSOCIATION relation to parent WrsCollectpoint ("Duplicate" parent columns in child to
 	//	                               allow attaching to parent without reading the parent)
@@ -141,14 +141,14 @@ public class Picklist implements Serializable {
 		this.picklistId = picklistId;
 	}
 
-	public WrsCollectpoint getWrsCollectpoint() {
-		return wrsCollectpoint;
-	}
-	/* maintaining relation via parent columns, not via object to avoid the need to read it)
-	public void setWrsCollectpoint(WrsCollectpoint wrsCollectpoint) {
-		this.wrsCollectpoint = wrsCollectpoint;
-	}
-	*/
+//	public WrsCollectpoint getWrsCollectpoint() {
+//		return wrsCollectpoint;
+//	}
+//	/* maintaining relation via parent columns, not via object to avoid the need to read it)
+//	public void setWrsCollectpoint(WrsCollectpoint wrsCollectpoint) {
+//		this.wrsCollectpoint = wrsCollectpoint;
+//	}
+//	*/
 
 	public long getCollectpointId() {
 		return this.collectpointId;

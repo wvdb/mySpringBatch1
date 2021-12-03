@@ -21,8 +21,7 @@ public class CarrierTypeName implements Serializable {
     //ASSOCIATION relation to parent IsoLanguage
     @ManyToOne(optional=true,
                fetch   =FetchType.LAZY)
-    @JoinColumn(name                ="ISO_LANG_CODE",  // column in child table CARRIER_TYPE_NAME
-                referencedColumnName="ISO_LANG_CODE")  // column in parent table REF_ISO_LANGUAGE
+    @JoinColumn(referencedColumnName="ISO_LANG_CODE")  // column in parent table REF_ISO_LANGUAGE
     private IsoLanguage isoLanguage;
     
     
