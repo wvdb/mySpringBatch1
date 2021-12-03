@@ -7,20 +7,15 @@ import java.io.Serializable;
  * The persistent class for the WRS_PICKLIST_LINE database table.
  * 
  */
-@Entity
-@Table(name="PICKLIST_LINE")
+//@Table(name="PICKLIST_LINE")
+@Embeddable
 public class PicklistLine implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
-	public static final String SEL_ALL_PICKLISTLINE = "PicklistLine.query.selAll";
-	static final String QUERY_SEL_ALL_PICKLISTLINE = "SELECT p"
-			                                        +" FROM PicklistLine pl"
-			                                        +" WHERE p.picklistId = :inPicklistId";
 
+//	private PicklistLinePK id;
 
-
-	@EmbeddedId
-	private PicklistLinePK id;
+	@Column(name="PICKLIST_LINE_NR")
+	private long picklistLineNr;
 
 	@Column(name="SELLING_PARTNER_ID")
 	private String sellingPartnerId;
@@ -110,11 +105,20 @@ public class PicklistLine implements Serializable {
     //-------------------------
     //-- getters and setters --
     //-------------------------
-    public PicklistLinePK getId() {
-		return this.id;
+//    public PicklistLinePK getId() {
+//		return this.id;
+//	}
+//	public void setId(PicklistLinePK id) {
+//		this.id = id;
+//	}
+
+
+	public long getPicklistLineNr() {
+		return picklistLineNr;
 	}
-	public void setId(PicklistLinePK id) {
-		this.id = id;
+
+	public void setPicklistLineNr(long picklistLineNr) {
+		this.picklistLineNr = picklistLineNr;
 	}
 
 	public String getSellingPartnerId() {

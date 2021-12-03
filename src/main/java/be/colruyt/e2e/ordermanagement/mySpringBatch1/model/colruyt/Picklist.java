@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -107,17 +108,20 @@ public class Picklist implements Serializable {
     private CarrierType carrierType;
     
 //    COMPOSITION relation to PicklistLine
-    @OneToMany(targetEntity = PicklistLine.class,
-            fetch        = FetchType.LAZY,   /* !! can be made EAGER for a query by adding fetchgroup Picklist.FETCHGROUP_PICKLISTLINES */
-      	    cascade      = CascadeType.ALL,  /* entrie(s) in list can be added/modified (child must be added/modified) */
-            orphanRemoval= true)             /* entrie(s) in list can be removed, in that case also remove child itself (if no new parent was assigned) */
-    @OrderBy("id.picklistLineNr ASC")        // sort on expected picking order
-	@JoinColumns(
-			{
-					@JoinColumn(name="PICKLIST_ID", referencedColumnName="PICKLIST_ID")
-			}
-	)
-	private Map<Long,PicklistLine> picklistLines;
+//    @OneToMany(targetEntity = PicklistLine.class,
+//            fetch        = FetchType.LAZY,   /* !! can be made EAGER for a query by adding fetchgroup Picklist.FETCHGROUP_PICKLISTLINES */
+//      	    cascade      = CascadeType.ALL,  /* entrie(s) in list can be added/modified (child must be added/modified) */
+//            orphanRemoval= true)             /* entrie(s) in list can be removed, in that case also remove child itself (if no new parent was assigned) */
+//    @OrderBy("id.picklistLineNr ASC")        // sort on expected picking order
+//	@JoinColumns(
+//			{
+//					@JoinColumn(name="PICKLIST_ID", referencedColumnName="PICKLIST_ID")
+//			}
+//	)
+	@ElementCollection(fetch=FetchType.EAGER)
+	@CollectionTable(name = "picklist_line", joinColumns = @JoinColumn(name = "PICKLIST_ID"))
+	@OrderBy("picklistLineNr ASC")
+	private Set<PicklistLine> picklistLines;
 
     //COMPOSITION relation to PicklistFfOrder
 //    @OneToMany(targetEntity = PicklistFfOrder.class,
@@ -235,15 +239,6 @@ public class Picklist implements Serializable {
 		this.picklistKindCode = picklistKindCode;
 	}
 
-//	public Map<Long,PicklistLine> getPicklistLines() {
-//		return this.picklistLines;
-//	}
-//	/* COMPOSITION: list content changed via parent methods => no need for setting "new/updated" list
-//	public void setPicklistLines(List<PicklistLine> picklistLines) {
-//		this.picklistLines = picklistLines;
-//	}
-//	*/
-//
 //	public Map<String, PicklistFfOrder> getPicklistFfOrders() {
 //		return this.picklistFfOrders;
 //	}
@@ -257,8 +252,15 @@ public class Picklist implements Serializable {
     public void setCarrierType(CarrierType carrierType) {
         this.carrierType = carrierType;
     }
-	
-	
+
+	public Set<PicklistLine> getPicklistLines() {
+		return picklistLines;
+	}
+
+	public void setPicklistLines(Set<PicklistLine> picklistLines) {
+		this.picklistLines = picklistLines;
+	}
+
 	//------------------------------------
 	//-- ADDITIONAL getters and setters --
 	//------------------------------------
