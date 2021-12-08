@@ -38,6 +38,9 @@ public class CarrierType implements Serializable {
     public CarrierType() {
     }
 
+    public CarrierType(String carrierType) {
+        this.carrierType = carrierType;
+    }
 
     //-------------------------
     //-- getters and setters --

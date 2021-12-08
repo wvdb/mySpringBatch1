@@ -1,5 +1,8 @@
 package be.colruyt.e2e.ordermanagement.mySpringBatch1.model.colruyt;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Map;
@@ -31,6 +34,9 @@ public class PicklistKind implements Serializable {
 	static final String QUERY_SEL_ALL_PICKLISTKIND  = "SELECT p"
 			                                         +" FROM PicklistKind p";
 
+	public PicklistKind(String kind) {
+		this.kind = kind;
+	}
 
 	@Id
 	@Column(name="KIND")
