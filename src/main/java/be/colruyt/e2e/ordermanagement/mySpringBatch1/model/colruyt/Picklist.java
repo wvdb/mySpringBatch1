@@ -80,4 +80,8 @@ public class Picklist implements Serializable {
 	@CollectionTable(name = "picklist_line", joinColumns = @JoinColumn(name = "PICKLIST_ID"))
 	@OrderBy("picklistLineNr ASC")
 	private Set<PicklistLine> picklistLines;
+
+	@ElementCollection(fetch=FetchType.EAGER)
+	@CollectionTable(name = "picklist_ff_order", joinColumns = @JoinColumn(name = "PICKLIST_ID"))
+	private Set<PicklistFfOrder> picklistFfOrders;
 }
