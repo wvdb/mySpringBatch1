@@ -44,12 +44,12 @@ public class Picklist implements Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,
 		    		generator= Picklist.SEQ_PICKLISTID)
 	@Column(name="PICKLIST_ID")
-	private long picklistId;
+	protected long picklistId;
 
 //	@ManyToOne(optional=true, fetch=FetchType.LAZY)
 //	@JoinColumn(name="FF_LOCATION", referencedColumnName="FF_LOCATION")
 //	private FfLocation ffLocation;
-	private Integer ffLocation;
+	protected Integer ffLocation;
 
 //	@ManyToOne(optional=true, fetch=FetchType.LAZY)
 //	@JoinColumn(name="COLLECTPOINT_ID", referencedColumnName="WRS_COLLECTPOINT_ID")
@@ -60,7 +60,7 @@ public class Picklist implements Serializable {
 //	@ManyToOne(optional=true, fetch=FetchType.LAZY)
 //	@JoinColumn(name="PICKLIST_KIND", referencedColumnName="KIND", nullable = false) // column in parent table PICKLIST_KIND
 //	private PicklistKind picklistKind;
-	private String picklistKind;
+    protected String picklistKind;
 
 //	@ManyToOne(optional=true, fetch=FetchType.LAZY)
 //	@JoinColumn(name="CARRIER_TYPE", referencedColumnName="CARRIER_TYPE")
@@ -84,4 +84,5 @@ public class Picklist implements Serializable {
 	@ElementCollection(fetch=FetchType.EAGER)
 	@CollectionTable(name = "picklist_ff_order", joinColumns = @JoinColumn(name = "PICKLIST_ID"))
 	private Set<PicklistFfOrder> picklistFfOrders;
+
 }

@@ -78,6 +78,7 @@ http://localhost:8188/customers/744/items
 
 ### Websites of interest
 * https://www.baeldung.com/spring-data-rest-relationships
+* https://www.baeldung.com/spring-data-jpa-query
 * https://www.markdownguide.org/extended-syntax/
 * https://howtodoinjava.com/junit5/
  
