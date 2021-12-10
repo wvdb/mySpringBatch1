@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Objects;
 import java.util.Set;
 
 
@@ -44,7 +45,7 @@ public class Picklist implements Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,
 		    		generator= Picklist.SEQ_PICKLISTID)
 	@Column(name="PICKLIST_ID")
-	protected long picklistId;
+	protected Long picklistId;
 
 //	@ManyToOne(optional=true, fetch=FetchType.LAZY)
 //	@JoinColumn(name="FF_LOCATION", referencedColumnName="FF_LOCATION")
@@ -85,4 +86,16 @@ public class Picklist implements Serializable {
 	@CollectionTable(name = "picklist_ff_order", joinColumns = @JoinColumn(name = "PICKLIST_ID"))
 	private Set<PicklistFfOrder> picklistFfOrders;
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Picklist)) return false;
+		Picklist picklist = (Picklist) o;
+		return Objects.equals(getPicklistId(), picklist.getPicklistId());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getPicklistId());
+	}
 }
