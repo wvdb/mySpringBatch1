@@ -1,9 +1,9 @@
 package be.colruyt.e2e.ordermanagement.mySpringBatch1;
 
-import be.colruyt.e2e.ordermanagement.mySpringBatch1.model.Customer;
-import be.colruyt.e2e.ordermanagement.mySpringBatch1.model.Item;
-import be.colruyt.e2e.ordermanagement.mySpringBatch1.model.ItemBis;
-import be.colruyt.e2e.ordermanagement.mySpringBatch1.model.PurchaseItemComplex;
+import be.colruyt.e2e.ordermanagement.mySpringBatch1.model.wim.Customer;
+import be.colruyt.e2e.ordermanagement.mySpringBatch1.model.wim.Item;
+import be.colruyt.e2e.ordermanagement.mySpringBatch1.model.wim.ItemBis;
+import be.colruyt.e2e.ordermanagement.mySpringBatch1.model.wim.PurchaseItemComplex;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

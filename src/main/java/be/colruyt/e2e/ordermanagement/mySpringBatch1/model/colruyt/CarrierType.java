@@ -1,9 +1,10 @@
 package be.colruyt.e2e.ordermanagement.mySpringBatch1.model.colruyt;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * The persistent class for the CARRIER_TYPE database table.

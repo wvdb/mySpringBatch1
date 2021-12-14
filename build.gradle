@@ -15,6 +15,7 @@ configurations {
 
 //bootJar.archiveName = project.name + ".jar"
 version = '0.0.1-SNAPSHOT'
+//project = 'mySpringBatch'
 
 def profiles = 'local'
 
@@ -23,7 +24,24 @@ bootRun {
     jvmArgs = ["-Dspring.output.ansi.enabled=ALWAYS"]
 }
 
+//repositories {
+//    flatDir {
+//        dirs 'C:/wim/colruyt/Java_Projecten_ThirdParty/wrsdomain/wrsdomain/build/libs'
+//    }
+//}
+
 dependencies {
+//    files('C:\\wim\\colruyt\\Java_Projecten_ThirdParty\\wrsdomain\\wrsdomain\\build\\libs\\wrsdomain-0.0.1-SNAPSHOT.jar')
+//    files('C:/wim/colruyt/Java_Projecten_ThirdParty/wrsdomain/wrsdomain/build/libs/wrsdomain-0.0.1-SNAPSHOT-plain.jar')
+//    compile group: "be.colruyt", name: "wrsdomain", version: "0.0.1-SNAPSHOT"
+//    compile 'be.colruyt:wrsdomain:0.0.1-SNAPSHOT'
+
+//    implementation  'wrsdomain-0.0.1-SNAPSHOT.jar'
+//    implementation group: 'be.colruyt', name: 'wrsdomain', version: '0.0.1-SNAPSHOT'
+//    implementation 'be.colruyt:wrsdomain:0.0.1-SNAPSHOT'
+
+//    implementation group: 'io.realm', name: 'realm-gradle-plugin', version: '10.0.0'
+
     implementation 'org.springframework.boot:spring-boot-starter-batch'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")

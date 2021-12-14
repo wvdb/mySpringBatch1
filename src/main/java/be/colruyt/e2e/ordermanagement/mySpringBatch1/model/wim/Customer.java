@@ -1,4 +1,4 @@
-package be.colruyt.e2e.ordermanagement.mySpringBatch1.model;
+package be.colruyt.e2e.ordermanagement.mySpringBatch1.model.wim;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
 import java.time.ZonedDateTime;
 import java.util.Objects;
 import java.util.Set;

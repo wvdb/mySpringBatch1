@@ -1,6 +1,6 @@
 package be.colruyt.e2e.ordermanagement.mySpringBatch1;
 
-import be.colruyt.e2e.ordermanagement.mySpringBatch1.model.Customer;
+import be.colruyt.e2e.ordermanagement.mySpringBatch1.model.wim.Customer;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;

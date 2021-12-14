@@ -1,6 +1,7 @@
 package be.colruyt.e2e.ordermanagement.mySpringBatch1.model.colruyt;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import java.io.Serializable;
 
 /**

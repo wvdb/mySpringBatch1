@@ -1,6 +1,6 @@
 package be.colruyt.e2e.ordermanagement.mySpringBatch1.controller;
 
-import be.colruyt.e2e.ordermanagement.mySpringBatch1.model.Customer;
+import be.colruyt.e2e.ordermanagement.mySpringBatch1.model.wim.Customer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.JobExecution;

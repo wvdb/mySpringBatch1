@@ -1,4 +1,4 @@
-package be.colruyt.e2e.ordermanagement.mySpringBatch1.model;
+package be.colruyt.e2e.ordermanagement.mySpringBatch1.model.wim;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

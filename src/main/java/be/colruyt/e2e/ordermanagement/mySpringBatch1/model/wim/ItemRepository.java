@@ -1,4 +1,4 @@
-package be.colruyt.e2e.ordermanagement.mySpringBatch1.model;
+package be.colruyt.e2e.ordermanagement.mySpringBatch1.model.wim;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;

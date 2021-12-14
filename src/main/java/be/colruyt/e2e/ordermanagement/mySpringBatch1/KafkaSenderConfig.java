@@ -1,6 +1,6 @@
 package be.colruyt.e2e.ordermanagement.mySpringBatch1;
 
-import be.colruyt.e2e.ordermanagement.mySpringBatch1.model.Customer;
+import be.colruyt.e2e.ordermanagement.mySpringBatch1.model.wim.Customer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;

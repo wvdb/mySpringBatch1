@@ -1,13 +1,7 @@
 package be.colruyt.e2e.ordermanagement.mySpringBatch1.model.colruyt;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
 
 
 /**

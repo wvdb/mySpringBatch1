@@ -1,8 +1,8 @@
 package be.colruyt.e2e.ordermanagement.mySpringBatch1;
 
-import be.colruyt.e2e.ordermanagement.mySpringBatch1.model.Customer;
-import be.colruyt.e2e.ordermanagement.mySpringBatch1.model.Item;
-import be.colruyt.e2e.ordermanagement.mySpringBatch1.model.Post;
+import be.colruyt.e2e.ordermanagement.mySpringBatch1.model.wim.Customer;
+import be.colruyt.e2e.ordermanagement.mySpringBatch1.model.wim.Item;
+import be.colruyt.e2e.ordermanagement.mySpringBatch1.model.wim.Post;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;

@@ -5,14 +5,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class PickListWithCarrierType extends Picklist{
+public class PickListWithCarrierType extends Picklist {
     private String carrierType;
     private Integer minSlotsAdvance;
 
