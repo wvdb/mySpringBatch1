@@ -5,13 +5,13 @@ import be.colruyt.e2e.ordermanagement.mySpringBatch1.model.poc.PickListWithPickL
 import be.colruyt.e2e.ordermanagement.mySpringBatch1.model.wim.Customer;
 import be.colruyt.e2e.ordermanagement.mySpringBatch1.repo.domain.PickListRepository;
 import be.colruyt.e2e.ordermanagement.mySpringBatch1.repo.poc.PickListWithPickListKindRepository;
+import be.colruyt.e2e.ordermanagement.mySpringBatch1.service.CustomerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Slf4j
@@ -25,11 +25,21 @@ public class MyController {
     @Autowired
     private PickListWithPickListKindRepository pickListWithPickListKindRepository;
 
+    @Autowired
+    private CustomerService customerService;
+
     @GetMapping(value="/dummy",
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Customer> dummy() {
         log.info("Created customer = " + customer);
         return ResponseEntity.ok(customer);
+    }
+
+    @PostMapping(value="/transaction1",
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void transaction1(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) {
+        customerService.createCustomer(firstName, lastName);
     }
 
     @GetMapping(value= "/getPickListWithCarrierType",

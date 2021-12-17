@@ -6,9 +6,6 @@ import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.data.transaction.ChainedTransactionManager;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
 
@@ -31,23 +28,23 @@ public class DatabaseConfig {
         return builder.build();
     }
 
-    @Bean
-    PlatformTransactionManager oracleDbTxManager() {
-        return new DataSourceTransactionManager(oracleDataSource());
-    }
-
-    @Bean
-    PlatformTransactionManager mysqlTxManager() {
-        return new DataSourceTransactionManager(mySqlDataSource());
-    }
-
-    @Bean(name = "chainTxManager")
-    PlatformTransactionManager chainTxManager() {
-        ChainedTransactionManager txManager =
-                new ChainedTransactionManager(
-                        oracleDbTxManager(),mysqlTxManager()
-                );
-        return txManager;
-    }
+//    @Bean(name = "oracleDbTxManager")
+//    PlatformTransactionManager oracleDbTxManager() {
+//        return new DataSourceTransactionManager(oracleDataSource());
+//    }
+//
+//    @Bean
+//    PlatformTransactionManager mysqlTxManager() {
+//        return new DataSourceTransactionManager(mySqlDataSource());
+//    }
+//
+//    @Bean(name = "chainTxManager")
+//    PlatformTransactionManager chainTxManager() {
+//        ChainedTransactionManager txManager =
+//                new ChainedTransactionManager(
+//                        oracleDbTxManager(),mysqlTxManager()
+//                );
+//        return txManager;
+//    }
 
 }

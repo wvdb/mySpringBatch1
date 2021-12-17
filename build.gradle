@@ -58,6 +58,9 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.8.2'
 
+    implementation("org.springframework.integration:spring-integration-jms")
+    compileOnly("javax.jms:javax.jms-api")
+
     runtimeOnly 'com.h2database:h2'
     compile 'com.oracle.ojdbc:ojdbc8:19.3.0.0'
 
