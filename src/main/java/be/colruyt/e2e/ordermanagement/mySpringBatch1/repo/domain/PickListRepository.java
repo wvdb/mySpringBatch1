@@ -1,4 +1,4 @@
-package be.colruyt.e2e.ordermanagement.mySpringBatch1.repo;
+package be.colruyt.e2e.ordermanagement.mySpringBatch1.repo.domain;
 
 import be.colruyt.e2e.ordermanagement.mySpringBatch1.model.colruyt.PickListWithCarrierType;
 import be.colruyt.e2e.ordermanagement.mySpringBatch1.model.colruyt.Picklist;
