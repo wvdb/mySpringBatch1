@@ -71,6 +71,13 @@ public class MyController {
         jmsTemplate.convertAndSend("DummyQueue3", dummy);
     }
 
+    @PostMapping("/send3")
+    public void send3(@RequestBody Dummy1 dummy) {
+        jmsTemplate.setPubSubDomain(true);
+//        jmsTemplate.setConnectionFactory(jmsListenerContainerFactory);
+        jmsTemplate.convertAndSend("MyTopic1", dummy);
+    }
+
     @GetMapping(value= "/getPickListWithCarrierType",
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<PickListWithCarrierType> getPickListWithCarrierType(@RequestParam("pickListId") Long pickListId) {

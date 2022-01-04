@@ -83,5 +83,13 @@ http://localhost:8188/customers/744/items
 * https://howtodoinjava.com/junit5/
 * https://docs.spring.io/spring-framework/docs/4.2.x/spring-framework-reference/html/transaction.html
 * https://medium.com/@akhaku/java-class-shadowing-and-shading-9439b0eacb13
+* DISTRIBUTED TRANSACTION
+    * https://www.baeldung.com/java-atomikos
+    * https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html
+    * https://docs.spring.io/spring-boot/docs/2.0.x/reference/html/boot-features-jta.html
+    * https://www.atomikos.com/Documentation/SpringBootIntegration
+    * https://activemq.apache.org/how-do-transactions-work
+    * https://dzone.com/articles/using-jms-in-spring-boot-1
+ 
  
 

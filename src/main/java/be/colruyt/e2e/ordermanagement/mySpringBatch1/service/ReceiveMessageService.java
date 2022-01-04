@@ -40,4 +40,16 @@ public class ReceiveMessageService {
         }
     }
 
+    @JmsListener(destination = "MyTopic1")
+    // TODO : to fix : subscribe does not work
+    public void receiveMessage5(Dummy1 message) {
+        log.info("Subscriber 1A - received on MyTopic1 <" + message + ">");
+    }
+
+    @JmsListener(containerFactory = "topicListenerFactory", destination = "MyTopic1")
+    // TODO : to fix : subscribe does not work
+    public void receiveMessage4(Dummy1 message) {
+        log.info("Subscriber 1B - received on MyTopic1 <" + message + ">");
+    }
+
 }
