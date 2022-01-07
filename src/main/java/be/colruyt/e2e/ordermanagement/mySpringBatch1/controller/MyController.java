@@ -89,4 +89,11 @@ public class MyController {
     public ResponseEntity<PickListWithPickListKind> getPickListWithPickListKind(@RequestParam("pickListId") Long pickListId) {
         return ResponseEntity.ok(pickListWithPickListKindRepository.findPickListWithPickListKind(pickListId));
     }
+
+//    @GetMapping(value= "/getPickListWithCarrierType",
+//            produces = {MediaType.APPLICATION_JSON_VALUE})
+//    public ResponseEntity<PickListWithCarrierType> getPickListWithCarrierType(@RequestParam("pickListId") Long pickListId) {
+//        return ResponseEntity.ok(pickListRepository.findPickListWithCarrierType(pickListId));
+//    }
+
 }

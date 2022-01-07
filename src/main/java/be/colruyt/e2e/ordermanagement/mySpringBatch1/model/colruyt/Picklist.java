@@ -86,6 +86,10 @@ public class Picklist implements Serializable {
 	@CollectionTable(name = "picklist_ff_order", joinColumns = @JoinColumn(name = "PICKLIST_ID"))
 	private Set<PicklistFfOrder> picklistFfOrders;
 
+	@ElementCollection(fetch= FetchType.LAZY)
+	@CollectionTable(name = "picking_delivery_unit", joinColumns = @JoinColumn(name = "PICKLIST_ID"))
+	private Set<PickingDeliveryUnit> pickingDeliveryUnits;
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;

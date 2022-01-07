@@ -2,6 +2,7 @@ package be.colruyt.e2e.ordermanagement.mySpringBatch1.repo.domain;
 
 import be.colruyt.e2e.ordermanagement.mySpringBatch1.model.colruyt.PickListWithCarrierType;
 import be.colruyt.e2e.ordermanagement.mySpringBatch1.model.colruyt.Picklist;
+import be.colruyt.e2e.ordermanagement.mySpringBatch1.model.colruyt.PicklistShort;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -17,10 +18,14 @@ import java.util.List;
 public interface PickListRepository extends CrudRepository<Picklist,Long> {
     List<Picklist> findByCarrierTypeAndCollectPointId(@Param("carrierType") String carrierType, @Param("collectPointId") Integer collectPointId);
 
-    @Query(value = "SELECT * FROM Picklist p WHERE p.PICKLIST_ID = ?1",
-            nativeQuery = true)
+    @Query(value = "SELECT * FROM Picklist p WHERE p.PICKLIST_ID = ?1", nativeQuery = true)
     Picklist findPickListById(long picklistId);
 
+    @Query(value = "SELECT new be.colruyt.e2e.ordermanagement.mySpringBatch1.model.colruyt.ShortPicklist(p.picklistId, p.ffLocation)" +
+            " FROM Picklist p WHERE p.picklistId = ?1")
+    PicklistShort findShortPickListById(long picklistId);
+
+    // only use from REST ctrl
     @Query("SELECT new be.colruyt.e2e.ordermanagement.mySpringBatch1.model.colruyt.PickListWithCarrierType(c.carrierType, c.minSlotsAdvance, p.picklistId, p.ffLocation, p.picklistKind) "
             + " FROM Picklist p, CarrierType c "
             + " WHERE p.carrierType = c.carrierType"
