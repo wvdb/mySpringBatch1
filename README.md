@@ -1,6 +1,6 @@
 # mySpringBatch1
 
-## Difference between Spring Data Rest entity and JPA entity
+## Difference between Spring Data Rest entity (item with a Repo) and a JPA entity (purchase)
 
 ```
 http://localhost:8188/customers/744
