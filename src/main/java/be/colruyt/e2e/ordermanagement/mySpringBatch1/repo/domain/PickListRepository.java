@@ -21,7 +21,7 @@ public interface PickListRepository extends CrudRepository<Picklist,Long> {
     @Query(value = "SELECT * FROM Picklist p WHERE p.PICKLIST_ID = ?1", nativeQuery = true)
     Picklist findPickListById(long picklistId);
 
-    @Query(value = "SELECT new be.colruyt.e2e.ordermanagement.mySpringBatch1.model.colruyt.ShortPicklist(p.picklistId, p.ffLocation)" +
+    @Query(value = "SELECT new be.colruyt.e2e.ordermanagement.mySpringBatch1.model.colruyt.PicklistShort(p.picklistId, p.ffLocation)" +
             " FROM Picklist p WHERE p.picklistId = ?1")
     PicklistShort findShortPickListById(long picklistId);
 

@@ -1,13 +1,10 @@
-Wim,Van den Brande
-Kris,Van den Brande
-Floriaan1,Van den Brande
-Floriaan2,Van den Brande
-Floriaan3,Van den Brande
-Floriaan4,Van den Brande
-Floriaan5,Van den Brande
-Floriaan6,Van den Brande
-Jan,Van den Brande
-Dummy,Trump1
-Dummy,Trump2
-Dummy,Trump3
-Dummy,Trump4
+1,Wim,Van den Brande
+2,Kris,Van den Brande
+3,Floriaan1,Van den Brande
+4,Floriaan2,Van den Brande
+5,Floriaan3,Van den Brande
+6,Floriaan4,Van den Brande
+7,Floriaan5,Van den Brande
+8,Floriaan6,Van den Brande
+9,Jan,Van den Brande
+10,Dummy,Trump1
