@@ -22,4 +22,6 @@ public class Purchase implements Serializable {
 
     @NotEmpty()
     private String name;
+
+    private Float cost;
 }
