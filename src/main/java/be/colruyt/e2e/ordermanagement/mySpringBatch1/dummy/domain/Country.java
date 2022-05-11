@@ -22,7 +22,6 @@ public class Country {
 
     @Override
     public String toString() {
-//        DecimalFormat df = new DecimalFormat("###_###_##0", new DecimalFormatSymbols(new Locale("fr", "BE")));
         DecimalFormat df = new DecimalFormat("###,###,##0");
 
         return "Country{" +
