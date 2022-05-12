@@ -1,9 +1,12 @@
 package be.colruyt.e2e.ordermanagement.mySpringBatch1;
 
+import be.colruyt.e2e.ordermanagement.mySpringBatch1.dummy.domain.CostCalculator;
 import be.colruyt.e2e.ordermanagement.mySpringBatch1.dummy.domain.Country;
+import be.colruyt.e2e.ordermanagement.mySpringBatch1.dummy.domain.LargeSize;
+import be.colruyt.e2e.ordermanagement.mySpringBatch1.dummy.domain.SmallSize;
 
-import java.time.DayOfWeek;
-import java.time.Month;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -46,9 +49,23 @@ public class DummyApplication {
             case "myDateMethod1":
                 myDateMethod1();
                 break;
+            case "myGenericMethod1":
+                myGenericMethod1();
+                break;
             default:
                 System.out.println("Nossing to do ;-)");
         }
+    }
+
+    private static void myGenericMethod1() {
+        SmallSize smallSize = new SmallSize("doos", 10, 10 , 10);
+        LargeSize largeSize = new LargeSize("pallet", 100, 100 , 100);
+
+        CostCalculator<SmallSize> costCalculator1 = new CostCalculator<>(smallSize);
+        System.out.println(costCalculator1.calculateCost());
+
+        CostCalculator<LargeSize> costCalculator2 = new CostCalculator<>(largeSize);
+        System.out.println(costCalculator2.calculateCost());
     }
 
     private static void myStreamMethod7() {
@@ -76,6 +93,17 @@ public class DummyApplication {
         for (DayOfWeek dayOfWeek : DayOfWeek.values()) {
             System.out.println(String.format("dag %s", dayOfWeek.getDisplayName(TextStyle.FULL, Locale.FRENCH)));
         }
+        Instant now = Instant.now();
+        ZoneId currentZone = ZoneId.systemDefault();
+
+        LocalDateTime localDateTime = LocalDateTime.ofInstant(now, currentZone);
+        System.out.println("Local dateTime: " + localDateTime);
+
+        ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(now, currentZone);
+        System.out.println("Zoned dateTime: " + zonedDateTime);
+
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+        System.out.println("ISO 8601 dateTime: " + zonedDateTime.format(dateTimeFormatter));
     }
 
     private static void myTokenMethod() {
