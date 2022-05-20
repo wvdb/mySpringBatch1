@@ -4,6 +4,7 @@ import be.colruyt.e2e.ordermanagement.mySpringBatch1.dummy.domain.CostCalculator
 import be.colruyt.e2e.ordermanagement.mySpringBatch1.dummy.domain.Country;
 import be.colruyt.e2e.ordermanagement.mySpringBatch1.dummy.domain.LargeSize;
 import be.colruyt.e2e.ordermanagement.mySpringBatch1.dummy.domain.SmallSize;
+import org.apache.commons.lang3.StringUtils;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -52,9 +53,18 @@ public class DummyApplication {
             case "myGenericMethod1":
                 myGenericMethod1();
                 break;
+            case "dummy1":
+                dummy1();
+                break;
             default:
                 System.out.println("Nossing to do ;-)");
         }
+    }
+
+    private static void dummy1() {
+        String barCode = "1234567890";
+
+        System.out.println("resultaat = " + (StringUtils.repeat( "0", 14 ) + barCode).substring( barCode.length() ));
     }
 
     private static void myGenericMethod1() {
