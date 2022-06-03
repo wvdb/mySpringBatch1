@@ -4,7 +4,7 @@ import be.colruyt.e2e.ordermanagement.mySpringBatch1.dummy.domain.CostCalculator
 import be.colruyt.e2e.ordermanagement.mySpringBatch1.dummy.domain.Country;
 import be.colruyt.e2e.ordermanagement.mySpringBatch1.dummy.domain.LargeSize;
 import be.colruyt.e2e.ordermanagement.mySpringBatch1.dummy.domain.SmallSize;
-import org.apache.commons.lang3.StringUtils;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -12,6 +12,7 @@ import java.time.format.TextStyle;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class DummyApplication {
     public static void main(String[] args) {
         if (args == null || args.length != 1) {
@@ -63,8 +64,6 @@ public class DummyApplication {
 
     private static void dummy1() {
         String barCode = "1234567890";
-
-        System.out.println("resultaat = " + (StringUtils.repeat( "0", 14 ) + barCode).substring( barCode.length() ));
     }
 
     private static void myGenericMethod1() {
